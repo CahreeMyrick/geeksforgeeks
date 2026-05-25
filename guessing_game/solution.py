@@ -1,45 +1,56 @@
+def validate_bounds(interval):
+    while True:
+        interval_split = interval.split()
+
+        if len(interval_split) != 2:
+            interval = input("Choose valid interval with two numbers: ")
+            continue
+
+        try:
+            left_bound = int(interval_split[0])
+            right_bound = int(interval_split[1])
+        except ValueError:
+            interval = input("Choose valid integer values: ")
+            continue
+
+        if left_bound > right_bound:
+            interval = input("Left bound must be less than right bound: ")
+            continue
+
+        return left_bound, right_bound
+
+
+def validate_feedback(feedback):
+    options = {"low", "high", "found", "quit"}
+
+    while feedback not in options:
+        feedback = input("Give valid feedback: low, high, found, or quit: ")
+
+    return feedback
+
+
 def main():
-    guess_range = input("Choose range, example: 1 100: ")
-
-    if guess_range == "quit":
-        return
-
-    range_split = guess_range.split()
-
-    if len(range_split) != 2:
-        print("Please enter exactly two numbers.")
-        return
-
-    try:
-        left = int(range_split[0])
-        right = int(range_split[1])
-    except ValueError:
-        print("Both values must be valid integers.")
-        return
-
-    if left > right:
-        print("Left number must be less than or equal to right number.")
-        return
+    interval = input("Choose interval (ex: 1 100, -5 1000): ")
+    left, right = validate_bounds(interval)
 
     while left <= right:
         guess = (left + right) // 2
         print(f"Guess: {guess}")
 
-        feedback = input("Too low, too high, found, or quit? ").lower().strip()
+        feedback = input("Feedback: ")
+        feedback = validate_feedback(feedback)
 
         if feedback == "low":
             left = guess + 1
         elif feedback == "high":
             right = guess - 1
-        elif feedback == "found":
-            print("Great! Thanks for playing.")
-            return
         elif feedback == "quit":
             return
-        else:
-            print("Enter something valid: low, high, found, or quit.")
+        elif feedback == "found":
+            print("Great. Thanks for playing.")
+            return
 
-    print("Your feedback was inconsistent. No valid number remains.")
+    print("Your feedback was inconsistent. No valid guesses remain.")
 
 
 main()
